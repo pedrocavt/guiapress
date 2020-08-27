@@ -1,0 +1,57 @@
+<%- include('../../partials/header.ejs') %>
+    <%- include ('../../partials/navbar.ejs') %>
+
+        <div class="container">
+            <br>
+            <h2>Categorias</h2>
+            <a href="/admin/categories/new" class="btn btn-success">Criar nova categoria</a>
+            <hr>
+
+            <table class="table table-bordered">
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Slug</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% categories.forEach(category=>{%>
+                        <tr>
+                            <td>
+                                <%= category.id %>
+                            </td>
+                            <td>
+                                <%= category.title %>
+                            </td>
+                            <td>
+                                <%= category.slug %>
+                            </td>
+                            <td>
+                                <a href="/admin/categories/edit/<%= category.id %>" class="btn btn-warning">Editar</a>
+
+                                <form action="/categories/delete" method="POST" style="display:inline" onsubmit="confirmarDelecao(event, this)">
+                                    <input type="hidden" name="id" value="<%= category.id %>">
+                                    <button class="btn btn-danger ">Deletar</button>
+                                </form>
+                            </td>
+
+                            <% })%>
+                </tbody>
+
+            </table>
+        </div>
+
+        <%- include('../../partials/footer.ejs') %>''
+            <script>
+                //função que previne que o usuário delete a categoria sem querer, mostrando um aviso
+                function confirmarDelecao(event, form) { //recebe o evento da tag e a propria tag (form)
+                    event.preventDefault(); //para o comportamento padrão
+                    var decision = confirm("Você quer deletar esta categoria? "); //mostra um aviso
+                    if (decision) { //se o aviso retorna true
+                        form.submit(); //ele deleta
+                    }
+                }
+            </script>
