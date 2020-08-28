@@ -57,5 +57,28 @@ router.post("/articles/delete", (req, res) => {
     }
 });
 
+//rota de edição
+router.get("/admin/articles/edit/:id", (req, res) => {
+    var id = req.params.id;
+
+    if (isNaN(id)) {
+        res.redirect("/admin/articles");
+    }
+
+    Article.findByPk(id).then(article => {
+        if (article != undefined) {
+
+            Category.findAll().then(categories => {
+                res.render("admin/articles/edit", { article : article, categories: categories });
+            })
+
+        } else {
+            res.redirect("/admin/articles");
+        }
+    }).catch(erro => {
+        res.redirect("/admin/articles")
+    })
+})
+
 
 module.exports = router;
