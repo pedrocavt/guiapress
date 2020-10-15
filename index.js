@@ -1,15 +1,27 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+const session = require("express-session")
 const connection = require("./database/database");
+
+//Sessions
+
+//Redis
+
+app.use(session({
+    secret: "aslçdkasçdkdasdasd,lç,",
+    cookie: { maxAge: 10000 * 30 } //30 segundos
+}))
 
 //Rotas controller
 const categoriesController = require("./categories/categoriesController");
 const articlesController = require("./articles/articleController");
+const userController = require("./user/userController")
 
 //importando os modules
 const Article = require("./articles/Article");
 const Category = require("./categories/Category");
+const User = require("./user/User")
 
 //view engine
 app.set('view engine', 'ejs');
@@ -35,11 +47,15 @@ app.use("/", categoriesController);
 
 app.use("/", articlesController);
 
+app.use("/", userController)
+
+
 app.get("/", (req, res) => {
     Article.findAll({
         order: [
             ['id', 'DESC']
-        ]
+        ],
+        limit: 2
     }).then(articles => {
 
         Category.findAll().then(categories => {
